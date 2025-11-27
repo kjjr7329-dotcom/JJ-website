@@ -5,7 +5,7 @@ import {
   Workflow, 
   Video, 
   Bike, 
-  Activity,
+  Trophy,
   BookOpen,
   ScrollText,
   Building2,
@@ -35,7 +35,7 @@ const interests: Interest[] = [
   { name: 'AI Research', icon: Cpu, category: 'Tech', description: '최신 AI 트렌드 및 LLM 활용' },
   { name: '업무 자동화', icon: Workflow, category: 'Tech', description: '생산성 향상을 위한 프로세스 최적화' },
   { name: '컨텐츠 제작', icon: Video, category: 'Tech', description: '디지털 미디어 & 스토리텔링' },
-  { name: '테니스', icon: Activity, category: 'Hobby', description: '즐거운 테니스를 통한 건강한 신체 단련' }, 
+  { name: '테니스', icon: Trophy, category: 'Hobby', description: '즐거운 테니스를 통한 건강한 신체 단련' }, 
   { name: '바이크 여행', icon: Bike, category: 'Hobby', description: '자유로운 바람과 새로운 풍경 여행' },
 ];
 
