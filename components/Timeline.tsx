@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, Landmark } from 'lucide-react';
@@ -7,7 +8,7 @@ const careerData: CareerItem[] = [
   {
     period: "2021 ~ 현재",
     role: "전업 투자자 (Full-time Investor)",
-    description: "글로벌 경제 동향 분석 및 가치 투자, 부동산,주식,금융자산 포트폴리오.",
+    description: "글로벌 경제 동향 분석 및 가치 투자, 부동산, 주식, 금융 투자.",
     icon: Landmark
   },
   {
@@ -20,7 +21,7 @@ const careerData: CareerItem[] = [
 
 const Timeline: React.FC = () => {
   return (
-    <section className="py-24 px-4 bg-slate-900">
+    <section className="py-24 px-4 bg-slate-900/60 backdrop-blur-sm border-t border-slate-800/30">
       <div className="max-w-4xl mx-auto">
         <motion.div 
            initial={{ opacity: 0, y: 20 }}
@@ -28,13 +29,13 @@ const Timeline: React.FC = () => {
            viewport={{ once: true }}
            className="mb-16 text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">경력 사항</h2>
-          <p className="text-slate-300 text-lg">걸어온 길, 그리고 나아가는 길</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">걸어온 길</h2>
+          <p className="text-slate-300 text-lg">나의 여정과 경력</p>
         </motion.div>
 
         <div className="relative">
           {/* Vertical Line */}
-          <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-0.5 bg-slate-700"></div>
+          <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-0.5 bg-slate-700/50"></div>
 
           <div className="space-y-12">
             {careerData.map((item, index) => {
@@ -57,7 +58,7 @@ const Timeline: React.FC = () => {
                   </div>
 
                   {/* Content Card */}
-                  <div className="ml-8 md:ml-0 w-full md:w-5/12 glass-card p-6 rounded-xl hover:bg-slate-800/80 transition-colors border border-slate-700/50">
+                  <div className="ml-8 md:ml-0 w-full md:w-5/12 glass-card p-6 rounded-xl hover:bg-slate-800/60 transition-colors border border-slate-700/50">
                     <span className="inline-block px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-bold mb-3">
                       {item.period}
                     </span>

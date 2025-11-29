@@ -1,3 +1,4 @@
+
 import { LucideIcon } from 'lucide-react';
 
 export interface CareerItem {
@@ -9,8 +10,8 @@ export interface CareerItem {
 
 export interface Certification {
   name: string;
-  type: 'tech' | 'admin' | 'finance';
-  description?: string;
+  description: string;
+  icon: LucideIcon;
 }
 
 export interface Interest {
@@ -27,13 +28,27 @@ export interface ContactInfo {
   icon: LucideIcon;
 }
 
-export interface PortfolioData {
-  name: string;
-  heroTitle: string;
-  heroSubtitle: string;
-  aboutTitle: string;
-  aboutDesc1: string;
-  aboutDesc2: string;
-  aboutDesc3: string;
-  profileImage: string | null;
+export interface UpdateItem {
+  id: number;
+  title: string;
+  date: string;
+  description: string;
+  image: string;
+}
+
+// 편집 가능한 텍스트 컨텐츠를 위한 타입
+export interface SiteContent {
+  hero: {
+    badge: string;
+    title: string;
+    description: string;
+  };
+  about: {
+    mainTitle: string;
+    subTitle: string;
+    desc1: string;
+    desc2: string;
+    profileImage?: string; // Base64 encoded image string
+  };
+  updates: UpdateItem[];
 }
