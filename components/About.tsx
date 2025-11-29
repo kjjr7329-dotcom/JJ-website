@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { User, Award, TrendingUp, Camera, Upload } from 'lucide-react';
@@ -13,20 +14,46 @@ const About: React.FC<AboutProps> = ({ isAdmin, content, onUpdate }) => {
   const [imgError, setImgError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Use stored profileImage or fallback to default
   const displayImage = content.profileImage || './profile.jpg';
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Convert file to Base64 to persist in localStorage via onUpdate
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        onUpdate('profileImage', base64String);
-        setImgError(false);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.src = event.target?.result as string;
       };
       reader.readAsDataURL(file);
+    });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const compressedBase64 = await compressImage(file);
+        onUpdate('profileImage', compressedBase64);
+        setImgError(false);
+      } catch (e) {
+        console.error("Compression failed", e);
+      }
     }
   };
 
@@ -53,7 +80,6 @@ const About: React.FC<AboutProps> = ({ isAdmin, content, onUpdate }) => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Image Side */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -61,9 +87,7 @@ const About: React.FC<AboutProps> = ({ isAdmin, content, onUpdate }) => {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            {/* Clean Frame Design */}
             <div className="relative rounded-xl overflow-hidden aspect-[4/5] shadow-2xl bg-slate-800 border border-slate-700/50 group">
-              
               <input 
                 type="file" 
                 ref={fileInputRef} 
@@ -77,15 +101,12 @@ const About: React.FC<AboutProps> = ({ isAdmin, content, onUpdate }) => {
                 alt="김종진 프로필" 
                 className={`w-full h-full object-cover transition-transform duration-700 ${!imgError ? "group-hover:scale-105" : "opacity-30 scale-100"}`}
                 onError={(e) => {
-                  // Only set error if we haven't already and there isn't a custom image
                   if (!imgError && !content.profileImage) setImgError(true);
                 }}
               />
               
-              {/* Overlay Gradient for Text Readability */}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80 pointer-events-none"></div>
 
-              {/* Show Fallback/Upload UI if image failed loading AND we don't have a custom image */}
               {(imgError && !content.profileImage) && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 backdrop-blur-sm p-6 text-center z-10">
                   <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mb-4 border border-slate-700">
@@ -102,7 +123,6 @@ const About: React.FC<AboutProps> = ({ isAdmin, content, onUpdate }) => {
                 </div>
               )}
 
-              {/* Admin Edit Button */}
               {isAdmin && (
                 <button 
                   onClick={() => fileInputRef.current?.click()}
@@ -120,7 +140,6 @@ const About: React.FC<AboutProps> = ({ isAdmin, content, onUpdate }) => {
             </div>
           </motion.div>
 
-          {/* Text Side */}
           <motion.div 
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
