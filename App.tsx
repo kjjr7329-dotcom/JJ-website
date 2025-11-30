@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { Settings, Check, Lock, Download } from 'lucide-react';
@@ -216,7 +215,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="text-slate-200 min-h-screen selection:bg-blue-500 selection:text-white relative">
+    <div className="text-slate-200 min-h-[100dvh] selection:bg-blue-500 selection:text-white relative">
       <Background3D />
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 origin-left z-[60]"

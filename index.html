@@ -2,8 +2,9 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>김종진 | 포트폴리오</title>
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.8.0/dist/es-module-shims.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -40,15 +41,18 @@
     <style>
       html {
         scroll-behavior: smooth;
+        -webkit-tap-highlight-color: transparent;
       }
       body {
         font-family: 'Noto Sans KR', sans-serif;
         background-color: #0f172a;
         color: #f8fafc;
+        overflow-x: hidden;
       }
       .glass-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
       .gradient-text {
@@ -56,11 +60,12 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
-      .animation-delay-2000 {
-        animation-delay: 2s;
+      .scrollbar-hide::-webkit-scrollbar {
+          display: none;
       }
-      .animation-delay-4000 {
-        animation-delay: 4s;
+      .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
       }
     </style>
   <script type="importmap">

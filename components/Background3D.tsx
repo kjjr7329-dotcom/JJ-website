@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 
 const Background3D: React.FC = () => {
@@ -11,10 +10,16 @@ const Background3D: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Use visual viewport size if available, fallback to window inner size
     let width = window.innerWidth;
     let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+    
+    // Set canvas size
+    const setSize = () => {
+      canvas.width = width;
+      canvas.height = height;
+    };
+    setSize();
 
     // 3D Point Interface
     interface Point3D {
@@ -25,7 +30,7 @@ const Background3D: React.FC = () => {
 
     // Stars (Particles)
     const stars: Point3D[] = [];
-    const numStars = 200;
+    const numStars = 150; // Reduced count for mobile performance
 
     for (let i = 0; i < numStars; i++) {
       stars.push({
@@ -53,6 +58,7 @@ const Background3D: React.FC = () => {
 
     let angleX = 0;
     let angleY = 0;
+    let animationId: number;
 
     const render = () => {
       // Clear canvas
@@ -67,24 +73,26 @@ const Background3D: React.FC = () => {
       stars.forEach(star => {
         // Move star closer
         star.z -= 0.5;
-        if (star.z <= 0) {
+        if (star.z <= 0.1) { // Prevent z becoming 0 or negative
           star.z = width;
           star.x = (Math.random() - 0.5) * width * 2;
           star.y = (Math.random() - 0.5) * height * 2;
         }
 
         // Project 3D to 2D
-        const k = 128.0 / star.z;
+        // Safety check for z
+        const safeZ = Math.max(0.1, star.z);
+        const k = 128.0 / safeZ;
         const px = star.x * k + cx;
         const py = star.y * k + cy;
 
         if (px >= 0 && px <= width && py >= 0 && py <= height) {
           // Fix: Ensure size is not negative to prevent IndexSizeError
-          const rawSize = (1 - star.z / width) * 2.5;
+          const rawSize = (1 - safeZ / width) * 2.5;
           const size = Math.max(0, rawSize);
-          const alpha = Math.max(0, (1 - star.z / width));
+          const alpha = Math.max(0, Math.min(1, (1 - safeZ / width)));
           
-          if (size > 0) {
+          if (size > 0.1) { // Only draw visible stars
             ctx.globalAlpha = alpha;
             ctx.beginPath();
             ctx.arc(px, py, size, 0, Math.PI * 2);
@@ -119,12 +127,15 @@ const Background3D: React.FC = () => {
         const p1 = rotatedNodes[i];
         const p2 = rotatedNodes[j];
 
-        // Project
-        const k1 = 600 / p1.z;
+        // Project with safety check
+        const z1 = Math.max(0.1, p1.z);
+        const z2 = Math.max(0.1, p2.z);
+
+        const k1 = 600 / z1;
         const x1 = p1.x * k1 + cx;
         const y1 = p1.y * k1 + cy;
 
-        const k2 = 600 / p2.z;
+        const k2 = 600 / z2;
         const x2 = p2.x * k2 + cx;
         const y2 = p2.y * k2 + cy;
 
@@ -140,16 +151,23 @@ const Background3D: React.FC = () => {
         }
       });
 
-      requestAnimationFrame(render);
+      animationId = requestAnimationFrame(render);
     };
 
-    const animationId = requestAnimationFrame(render);
+    animationId = requestAnimationFrame(render);
 
     const handleResize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      const newWidth = window.innerWidth;
+      const newHeight = window.innerHeight;
+      
+      // On mobile, browser address bar hide/show triggers resize.
+      // We only want to reset canvas if width changes (orientation change)
+      // or if height changes significantly.
+      if (width !== newWidth || Math.abs(height - newHeight) > 100) {
+        width = newWidth;
+        height = newHeight;
+        setSize();
+      }
     };
 
     window.addEventListener('resize', handleResize);
