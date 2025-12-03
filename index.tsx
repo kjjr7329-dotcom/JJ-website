@@ -1,4 +1,3 @@
-"use client"; // 이 줄이 맨 위에 있어야 합니다.
 
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
